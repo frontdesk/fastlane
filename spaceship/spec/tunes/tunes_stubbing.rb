@@ -238,7 +238,6 @@ def itc_stub_create_sandbox_tester
 end
 
 def itc_stub_delete_sandbox_tester
-  body = JSON.parse(itc_read_fixture_file("delete_sandbox_tester_payload.json"))
   stub_request(:post, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/users/iap/delete").
     with(body: JSON.parse(itc_read_fixture_file("delete_sandbox_tester_payload.json")).to_json).
     to_return(status: 200, body: itc_read_fixture_file("delete_sandbox_tester.json"),
@@ -276,6 +275,39 @@ def itc_stub_promocodes_history
               headers: { "Content-Type" => "application/json" })
 end
 
+def itc_stub_supported_countries
+  stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/pricing/supportedCountries").
+    to_return(status: 200, body: itc_read_fixture_file("supported_countries.json"),
+              headers: { "Content-Type" => "application/json" })
+end
+
+def itc_stub_app_pricing_intervals
+  stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/pricing/intervals").
+    to_return(status: 200, body: itc_read_fixture_file("app_pricing_intervals.json"),
+              headers: { "Content-Type" => "application/json" })
+end
+
+def itc_stub_app_add_territory
+  stub_request(:post, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/pricing/intervals").
+    with(body: JSON.parse(itc_read_fixture_file(File.join('availability', 'add_request.json'))).to_json).
+    to_return(status: 200, body: itc_read_fixture_file(File.join('availability', 'add_response.json')),
+              headers: { 'Content-Type' => 'application/json' })
+end
+
+def itc_stub_app_remove_territory
+  stub_request(:post, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/pricing/intervals").
+    with(body: JSON.parse(itc_read_fixture_file(File.join('availability', 'remove_request.json'))).to_json).
+    to_return(status: 200, body: itc_read_fixture_file(File.join('availability', 'remove_response.json')),
+              headers: { 'Content-Type' => 'application/json' })
+end
+
+def itc_stub_app_uninclude_future_territories
+  stub_request(:post, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/pricing/intervals").
+    with(body: JSON.parse(itc_read_fixture_file(File.join('availability', 'uninclude_all_future_territories_request.json'))).to_json).
+    to_return(status: 200, body: itc_read_fixture_file(File.join('availability', 'uninclude_all_future_territories_response.json')),
+              headers: { 'Content-Type' => 'application/json' })
+end
+
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|
@@ -297,5 +329,7 @@ RSpec.configure do |config|
     itc_stub_promocodes
     itc_stub_generate_promocodes
     itc_stub_promocodes_history
+    itc_stub_supported_countries
+    itc_stub_app_pricing_intervals
   end
 end

@@ -443,6 +443,53 @@ module Spaceship
       data.map { |tier| Spaceship::Tunes::PricingTier.factory(tier) }
     end
 
+    #####################################################
+    # @!group Availability
+    #####################################################
+    # Updates the availability
+    #
+    # @note Although this information is publicly available, the current spaceship implementation requires you to have a logged in client to access it
+    # @param app_id (String): The id of your app
+    # @param territories (Array): The territories to enable (String or Spaceship::Tunes::Territory)
+    # @param opts (Hash): Options
+    #   `include_future_territories` - are all future territories included? default is current value.
+    #
+    # @return [Spaceship::Tunes::Availability] the Availability
+    def update_availability!(app_id, territories, opts = {})
+      r = request(:get, "ra/apps/#{app_id}/pricing/intervals")
+      data = parse_response(r, 'data')
+
+      data["countriesChanged"] = true
+      data["countries"] = territories.map { |territory| transform_territory(territory) }
+      data["theWorld"] = opts.fetch(:include_future_territories, data["theWorld"])
+
+      # send the changes back to Apple
+      r = request(:post) do |req|
+        req.url "ra/apps/#{app_id}/pricing/intervals"
+        req.body = data.to_json
+        req.headers['Content-Type'] = 'application/json'
+      end
+      handle_itc_response(r.body)
+      data = parse_response(r, 'data')
+      Spaceship::Tunes::Availability.factory(data)
+    end
+
+    def availability(app_id)
+      r = request(:get, "ra/apps/#{app_id}/pricing/intervals")
+      data = parse_response(r, 'data')
+      Spaceship::Tunes::Availability.factory(data)
+    end
+
+    # Returns an array of all supported territories
+    #
+    # @note Although this information is publicly available, the current spaceship implementation requires you to have a logged in client to access it
+    #
+    # @return [Array] the Territory objects (Spaceship::Tunes::Territory)
+    def supported_territories
+      data = supported_countries
+      data.map { |country| Spaceship::Tunes::Territory.factory(country) }
+    end
+
     # An array of supported countries
     # [{
     #   "code": "AL",
@@ -1014,6 +1061,14 @@ module Spaceship
 
       data = parse_response(r, 'data')
       handle_itc_response(data)
+    end
+
+    def transform_territory(territory)
+      if territory.kind_of?(String)
+        { 'code' => territory }
+      else # assume Spaceship::Tunes::Territory
+        { 'code' => territory.code }
+      end
     end
   end
   # rubocop:enable Metrics/ClassLength
