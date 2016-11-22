@@ -134,8 +134,8 @@ module Spaceship
       end
 
       def upload_export_compliance_ccat_file!(file_path)
-        upload_doc = UploadFile.from_path file_path
-        doc_data = client.upload_export_compliance_ccat_file(version, upload_doc)
+        upload_file = UploadFile.from_path(file_path)
+        doc_data = client.upload_export_compliance_ccat_file(version, upload_file)
 
         @export_compliance_ccat_file = Tunes::ArbitraryFile.factory({}) if @export_compliance_ccat_file.nil?
         @export_compliance_ccat_file.url = nil # response.headers['Location']
