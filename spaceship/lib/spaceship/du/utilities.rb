@@ -16,6 +16,7 @@ module Spaceship
       return 'video/quicktime' if path.end_with?('.mov')
       return 'video/mp4' if path.end_with?('.m4v')
       return 'video/mp4' if path.end_with?('.mp4')
+      return 'application/pdf' if path.end_with?('.pdf')
       raise "Unknown content-type for file #{path}"
     end
 

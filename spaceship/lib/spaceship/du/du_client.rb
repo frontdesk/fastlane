@@ -38,6 +38,10 @@ module Spaceship
       upload_file(app_version, upload_file, '/upload/app-screenshot-image', content_provider_id, sso_token_for_image)
     end
 
+    def upload_arbitrary_file(app_version, upload_file, content_provider_id, sso_token_for_image)
+      upload_file(app_version, upload_file, '/upload/arbitrary-file', content_provider_id, sso_token_for_image)
+    end
+
     private
 
     def upload_file(app_version, upload_file, path, content_provider_id, sso_token, du_validation_rule_set = nil)

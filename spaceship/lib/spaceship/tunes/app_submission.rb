@@ -40,7 +40,7 @@ module Spaceship
       # @return (Boolean) Export Compliance - Available on French Store
       attr_accessor :export_compliance_available_on_french_store
 
-      # @return (Not Yet Implemented) Export Compliance - CCAT File
+      # @return (Spaceship::Tunes::ArbitraryFile) Export Compliance - CCAT File. Can be null
       attr_accessor :export_compliance_ccat_file
 
       # @return (Boolean) Export Compliance - Contains proprietary cryptography
@@ -81,6 +81,7 @@ module Spaceship
 
         # Export Compliance Section
         'exportCompliance.availableOnFrenchStore.value' => :export_compliance_available_on_french_store,
+        # TODO This probably won't work well
         'exportCompliance.ccatFile.value' => :export_compliance_ccat_file,
         'exportCompliance.containsProprietaryCryptography.value' => :export_compliance_contains_proprietary_cryptography,
         'exportCompliance.containsThirdPartyCryptography.value' => :export_compliance_contains_third_party_cryptography,
@@ -130,6 +131,17 @@ module Spaceship
 
       def setup
         @submitted_for_review = false
+      end
+
+      def upload_export_compliance_ccat_file!(file_path)
+        upload_doc = UploadFile.from_path file_path
+        doc_data = client.upload_export_compliance_ccat_file(version, upload_doc)
+
+        @export_compliance_ccat_file = Tunes::ArbitraryFile.factory({}) if @export_compliance_ccat_file.nil?
+        @export_compliance_ccat_file.url = nil # response.headers['Location']
+        @export_compliance_ccat_file.asset_token = doc_data["token"]
+        @export_compliance_ccat_file.name = upload_file.file_name
+        @export_compliance_ccat_file.time_stamp = Time.now.to_i * 1000 # works without but...
       end
     end
   end

@@ -1024,6 +1024,20 @@ module Spaceship
       parse_response(r, 'data')['requests']
     end
 
+    #####################################################
+    # @!group Encryption
+    #####################################################
+    # Uploads an export compliance CCAT file
+    # @param app_version (AppVersion): The version of your app
+    # @param upload_file (UploadFile): The file to upload
+    # @return [JSON] the response
+    def upload_export_compliance_ccat_file(app_version, upload_file)
+      raise "app_version is required" unless app_version
+      raise "upload_file is required" unless upload_file
+
+      du_client.upload_arbitrary_file(app_version, upload_file, content_provider_id, sso_token_for_image)
+    end
+
     private
 
     def with_tunes_retry(tries = 5, &_block)
