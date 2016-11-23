@@ -138,8 +138,9 @@ module Spaceship
         doc_data = client.upload_export_compliance_ccat_file(version, upload_file)
 
         @export_compliance_ccat_file = Tunes::ArbitraryFile.factory({}) if @export_compliance_ccat_file.nil?
-        @export_compliance_ccat_file.url = nil # response.headers['Location']
-        @export_compliance_ccat_file.asset_token = doc_data["token"]
+        # Looking at the raw request in a browser inspector, it uses the URL and name field, rather than the asset_token
+        @export_compliance_ccat_file.url = "http://a682.phobos.apple.com/us/r30/#{doc_data['token']}"
+        @export_compliance_ccat_file.asset_token = nil
         @export_compliance_ccat_file.name = upload_file.file_name
         @export_compliance_ccat_file.time_stamp = Time.now.to_i * 1000 # works without but...
       end

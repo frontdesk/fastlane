@@ -138,7 +138,7 @@ module Spaceship
         'largeAppIcon.value.originalFileName' => :app_icon_original_name,
         'largeAppIcon.value.url' => :app_icon_url,
         'releaseOnApproval.value' => :release_on_approval,
-        'auto_release_date.value' => :auto_release_date,
+        'autoReleaseDate.value' => :auto_release_date,
         'status' => :raw_status,
         'preReleaseBuild.buildVersion' => :build_version,
         'supportsAppleWatch' => :supports_apple_watch,
@@ -533,6 +533,11 @@ module Spaceship
 
       def supports_apple_watch
         !super.nil?
+      end
+
+      def reject!
+        raise 'Version not rejectable' unless can_reject_version
+        client.reject!(self.application.apple_id, self.version_id)
       end
 
       private
