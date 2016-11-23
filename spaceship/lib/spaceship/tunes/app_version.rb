@@ -45,6 +45,9 @@ module Spaceship
       # @return (Bool) Should the app automatically be released once it's approved?
       attr_accessor :release_on_approval
 
+      # @return (Fixnum) Epoch time for releasing in GMT (e.g. 1480435200000)
+      attr_accessor :auto_release_date
+
       # @return (Bool)
       attr_accessor :can_beta_test
 
@@ -135,6 +138,7 @@ module Spaceship
         'largeAppIcon.value.originalFileName' => :app_icon_original_name,
         'largeAppIcon.value.url' => :app_icon_url,
         'releaseOnApproval.value' => :release_on_approval,
+        'auto_release_date.value' => :auto_release_date,
         'status' => :raw_status,
         'preReleaseBuild.buildVersion' => :build_version,
         'supportsAppleWatch' => :supports_apple_watch,
