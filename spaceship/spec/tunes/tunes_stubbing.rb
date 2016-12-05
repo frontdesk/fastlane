@@ -13,7 +13,7 @@ def itc_stub_login
     to_return(status: 200, body: itc_read_fixture_file('login_cntrl.js'))
   stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa").
     to_return(status: 200, body: "")
-  stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/wa/route?noext=true").
+  stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/wa").
     to_return(status: 200, body: "")
 
   # Actual login
@@ -246,6 +246,7 @@ def itc_stub_create_sandbox_tester
 end
 
 def itc_stub_delete_sandbox_tester
+  body = JSON.parse(itc_read_fixture_file("delete_sandbox_tester_payload.json"))
   stub_request(:post, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/users/iap/delete").
     with(body: JSON.parse(itc_read_fixture_file("delete_sandbox_tester_payload.json")).to_json).
     to_return(status: 200, body: itc_read_fixture_file("delete_sandbox_tester.json"),
@@ -280,6 +281,12 @@ end
 def itc_stub_promocodes_history
   stub_request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/promocodes/history").
     to_return(status: 200, body: itc_read_fixture_file("promocodes_history.json"),
+              headers: { "Content-Type" => "application/json" })
+end
+
+def itc_stub_reject_version_success
+  stub_request(:post, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/ra/apps/898536088/versions/812106519/reject").
+    to_return(status: 200, body: itc_read_fixture_file("reject_app_version_success.json"),
               headers: { "Content-Type" => "application/json" })
 end
 

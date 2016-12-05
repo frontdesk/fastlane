@@ -5,6 +5,8 @@ require 'faraday-cookie_jar'
 require 'spaceship/ui'
 require 'spaceship/helper/plist_middleware'
 require 'spaceship/helper/net_http_generic_request'
+require 'tmpdir'
+require 'spaceship/babosa_fix'
 
 Faraday::Utils.default_params_encoder = Faraday::FlatParamsEncoder
 
@@ -301,7 +303,7 @@ module Spaceship
       end
 
       # get woinst, wois, and itctx cookie values
-      request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/wa/route?noext")
+      request(:get, "https://itunesconnect.apple.com/WebObjects/iTunesConnect.woa/wa")
 
       case response.status
       when 403
