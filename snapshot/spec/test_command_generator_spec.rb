@@ -30,7 +30,7 @@ describe Snapshot do
     end
 
     describe "Valid Configuration" do
-      let(:options) { { project: "./example/Example.xcodeproj", scheme: "ExampleUITests" } }
+      let(:options) { { project: "./snapshot/example/Example.xcodeproj", scheme: "ExampleUITests" } }
 
       def configure(options)
         Snapshot.config = FastlaneCore::Configuration.create(Snapshot::Options.available_options, options)
@@ -48,13 +48,13 @@ describe Snapshot do
               "set -o pipefail &&",
               "xcodebuild",
               "-scheme ExampleUITests",
-              "-project ./example/Example.xcodeproj",
+              "-project ./snapshot/example/Example.xcodeproj",
               "-derivedDataPath '/tmp/path/to/snapshot_derived'",
               "-destination 'platform=iOS Simulator,id=#{id},OS=#{ios}'",
               "FASTLANE_SNAPSHOT=YES",
               :build,
               :test,
-              "| tee #{File.expand_path('~/Library/Logs/snapshot/Example-ExampleUITests.log')} | xcpretty "
+              "| tee #{File.expand_path("#{FastlaneCore::Helper.buildlog_path}/snapshot/Example-ExampleUITests.log")} | xcpretty "
             ]
           )
         end
@@ -70,13 +70,13 @@ describe Snapshot do
               "set -o pipefail &&",
               "xcodebuild",
               "-scheme ExampleUITests",
-              "-project ./example/Example.xcodeproj",
+              "-project ./snapshot/example/Example.xcodeproj",
               "-derivedDataPath '/tmp/path/to/snapshot_derived'",
               "-destination 'platform=tvOS Simulator,id=#{id},OS=#{os}'",
               "FASTLANE_SNAPSHOT=YES",
               :build,
               :test,
-              "| tee #{File.expand_path('~/Library/Logs/snapshot/Example-ExampleUITests.log')} | xcpretty "
+              "| tee #{File.expand_path("#{FastlaneCore::Helper.buildlog_path}/snapshot/Example-ExampleUITests.log")} | xcpretty "
             ]
           )
         end

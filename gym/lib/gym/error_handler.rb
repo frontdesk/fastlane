@@ -90,8 +90,7 @@ module Gym
           print "    gym(use_legacy_build_api: true)"
           print "On the command line:"
           print "    gym --use_legacy_build_api"
-        when /IDEDistributionErrorDomain error 1/
-        when /Error Domain=IDEDistributionErrorDomain Code=/
+        when /Error Domain=IDEDistributionErrorDomain Code=/, /IDEDistributionErrorDomain error 1/
           standard_output = read_standard_output output
           print standard_output if standard_output
           print "There was an error exporting your application"
@@ -146,7 +145,7 @@ module Gym
         # sure they are aware of the Xcode version and SDK they're using
         values = {
           xcode_path: File.expand_path("../..", FastlaneCore::Helper.xcode_path),
-          gym_version: Gym::VERSION
+          gym_version: Fastlane::VERSION
         }
 
         sdk_path = Gym.project.build_settings(key: "SDKROOT")
