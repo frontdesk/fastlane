@@ -296,7 +296,8 @@ module Screengrab
       Dir.mktmpdir do |tempdir|
         device_screenshots_paths.each do |device_path|
           if_device_path_exists(device_serial, device_path) do |path|
-            next unless path.include?(locale)
+            # NOTE: The folder that our screenshots are located at do not include the locale in the pathname.
+            # next unless path.include?(locale)
             run_adb_command("-s #{device_serial} pull #{path} #{tempdir}",
                             print_all: false,
                             print_command: true)
